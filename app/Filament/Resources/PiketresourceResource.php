@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AbsensiResource\Pages;
-use App\Filament\Resources\AbsensiResource\RelationManagers;
-use App\Models\Absensi;
+use App\Filament\Resources\PiketresourceResource\Pages;
+use App\Filament\Resources\PiketresourceResource\RelationManagers;
+use App\Models\Piket;
+use App\Models\Piketresource;
 use Filament\Forms;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
@@ -14,37 +15,36 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AbsensiResource extends Resource
+class PiketresourceResource extends Resource
 {
-    protected static ?string $model = Absensi::class;
+    protected static ?string $model = Piket::class;
 
-    protected static ?string $navigationLabel = 'kehadiran karyawan';
+    protected static ?string $navigationLabel = 'piket';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?string $navigationIcon = 'heroicon-o-trash';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('nama')
+                TextInput::make('name')
+                    ->label('Nama')
                     ->required()
-                    ->maxLength(225),
-
-                TimePicker::make('jam_kedatangan')
-                    ->label('jam kedatangan')
+                    ->maxLength(255),
+                TimePicker::make('tanggal_waktu_piket')
+                    ->label('Tanggal dan Waktu Piket')
                     ->required(),
-
-                Toggle::make('kehadiran')
-                    ->label('Hadir?'),
-
-                Textarea::make('catatan')
+                Toggle::make('piket')
+                    ->label('Status Piket')
+                    ->required(),
+                TextInput::make('catatan')
                     ->label('Catatan')
-                    ->rows(4)
-                    ->maxLength(1000),
             ]);
     }
 
@@ -52,22 +52,16 @@ class AbsensiResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nama')
+                TextColumn::make('name')
+                    ->label('Nama')
                     ->sortable()
                     ->searchable(),
-
-                TextColumn::make('jam_kedatangan')
-                    ->label('Jam Kedatangan')
-                    ->sortable(),
-
-                Tables\Columns\IconColumn::make('kehadiran')
-                    ->boolean()
-                    ->label('Hadir?'),
-
+               TextColumn::make('tanggal_waktu_piket')
+                    ->label('Tanggal'),
+                ToggleColumn::make('piket')
+                    ->label('Status Piket'),
                 TextColumn::make('catatan')
                     ->label('Catatan')
-                    ->wrap()
-                    ->limit(50),
             ])
             ->filters([
                 //
@@ -75,6 +69,7 @@ class AbsensiResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+              
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -93,9 +88,9 @@ class AbsensiResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAbsensis::route('/'),
-            'create' => Pages\CreateAbsensi::route('/create'),
-            'edit' => Pages\EditAbsensi::route('/{record}/edit'),
+            'index' => Pages\ListPiketresources::route('/'),
+            'create' => Pages\CreatePiketresource::route('/create'),
+            'edit' => Pages\EditPiketresource::route('/{record}/edit'),
         ];
     }
 }
