@@ -14,7 +14,7 @@ return new class extends Migration
         if (!Schema::hasTable('metadata')) {
             Schema::create('metadata', function (Blueprint $table) {
                 $table->id();
-                $table->string('nama');
+                $table->string('nama')->unique(); // Tambahkan unique
                 $table->timestamps();
             });
         }

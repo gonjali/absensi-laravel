@@ -4,28 +4,42 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 
 class Absensi extends Model
 {
     use HasFactory;
 
-    // Nama tabel (opsional jika mengikuti konvensi Laravel)
     protected $table = 'absensis';
 
-    // Field yang boleh diisi secara massal
     protected $fillable = [
         'nama',
+        'hari',
+        'tanggal',
         'jam_kedatangan',
         'kehadiran',
         'catatan',
     ];
 
-    // Tipe data cast untuk field tertentu
     protected $casts = [
         'jam_kedatangan' => 'datetime:H:i',
         'kehadiran' => 'boolean',
     ];
 
-    // Relasi: satu Absensi memiliki satu atau banyak Catatan
-   
+    // Relasi ke Metadata
+    public function metadata()
+    {
+        return $this->belongsTo(Metadata::class, 'nama', 'nama');
+    }
+
+    // Tambahkan boot method untuk mengisi default value
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($absensi) {
+            $absensi->hari = Carbon::now()->translatedFormat('l');
+            $absensi->tanggal = Carbon::now()->format('Y-m-d');
+        });
+    }
 }

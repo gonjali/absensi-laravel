@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 // Route for metadata Livewire component
 Route::get('/absensi', Absensi::class);
 Route::get('/piket', Piket::class);

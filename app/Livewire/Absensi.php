@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Absensi as ModelsAbsensi;
+use App\Models\Metadata;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Livewire\Component;
@@ -11,17 +12,20 @@ class Absensi extends Component implements HasForms
 {
     use InteractsWithForms;
 
-     public ?array $data = [];
-
-    public function mount(): void
-    {
-        $this->form->fill(); // isi default jika ada
-    }
-
+    public ?array $data = [];
     public $nama;
     public $jam_kedatangan;
     public $kehadiran = false;
     public $catatan;
+
+    // Variabel untuk menampung data Metadata
+    public $metadatas = [];
+
+    public function mount(): void
+    {
+        $this->metadatas = Metadata::all(); // Ambil semua data dari tabel Metadata
+        $this->form->fill(); // Isi default jika ada
+    }
 
     public function submit()
     {
@@ -46,8 +50,9 @@ class Absensi extends Component implements HasForms
     }
 
     public function render()
-{
-    return view('livewire.absensi')
-        ->layout('layouts.absensi');
-}
+    {
+        return view('livewire.absensi', [
+            'metadatas' => $this->metadatas,
+        ])->layout('layouts.absensi');
+    }
 }

@@ -12,10 +12,14 @@ class Metadata extends Model
         'nama',
     ];
 
-    public $timestamps = false;
-
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    // Relasi ke Absensi
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'nama', 'nama');
+    }
 }

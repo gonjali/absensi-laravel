@@ -22,7 +22,7 @@ class AbsensiResource extends Resource
 {
     protected static ?string $model = Absensi::class;
 
-    protected static ?string $navigationLabel = 'kehadiran karyawan';
+    protected static ?string $navigationLabel = 'Absensi karyawan';
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
@@ -30,7 +30,7 @@ class AbsensiResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('nama')
+                Select::make('metadata.nama')
                     ->required()
                     ->maxLength(225),
 
@@ -40,7 +40,6 @@ class AbsensiResource extends Resource
 
                 Toggle::make('kehadiran')
                     ->label('Hadir?'),
-
                 Textarea::make('catatan')
                     ->label('Catatan')
                     ->rows(4)
@@ -51,13 +50,34 @@ class AbsensiResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
+             ->columns([
                 TextColumn::make('nama')
-                    ->sortable()
-                    ->searchable(),
+                    ->sortable(),
+                 TextColumn::make('hari')
+                    ->label('Hari')
+                   ->sortable()
+                  ->formatStateUsing(function ($state) {
+                        // Jika field 'hari' adalah integer (1-5), ubah ke nama hari
+                       $days = [
+                            1 => 'Senin',
+                            2 => 'Selasa',
+                            3 => 'Rabu',
+                           4 => 'Kamis',
+                           5 => 'Jumat',
+                       ];
+                       return $days[$state] ?? $state;
+                   })
+                     ->searchable(),
+                    TextColumn::make('tanggal')
+                        ->label('Tanggal')
+                        ->date('d-m-Y')
+                        ->sortable()
+                        ->searchable(),
+
 
                 TextColumn::make('jam_kedatangan')
                     ->label('Jam Kedatangan')
+                    ->time() // Menampilkan hanya jam
                     ->sortable(),
 
                 Tables\Columns\IconColumn::make('kehadiran')
