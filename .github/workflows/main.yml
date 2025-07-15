@@ -31,7 +31,7 @@ jobs:
         with:
           registry: ${{ env.GH_REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GIT_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -61,7 +61,13 @@ jobs:
         with:
           command: deploy
           api-token: ${{ secrets.DEPLOYAJA_TOKEN }}
-          additional-args: --set container.image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          additional-args: |
+            --set container.image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            --set env[12].value=${{ vars.DB_HOST }} \
+            --set env[13].value=${{ vars.DB_DATABASE }} \
+            --set env[14].value=${{ secrets.DB_USERNAME }} \
+            --set env[15].value=${{ secrets.DB_PASSWORD }} \
+            --set env[16].value=${{ vars.DB_PORT }}
           
       - name: DeployAja Status
         uses: deployaja/deployaja-cli@v0.0.10

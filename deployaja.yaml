@@ -8,11 +8,6 @@ resources:
   cpu: 500m
   memory: 1Gi
   replicas: 1
-dependencies:
-  - name: postgresql
-    type: POSTGRESQL
-    version: "16"
-    storage_size: 1Gi
 env:
   - name: ADMIN_NAME
     value: admin
@@ -40,14 +35,25 @@ env:
     userManaged: true
   - name: DB_SSLMODE
     value: disable
+#insert from github variable/secret
+  - name: DB_HOST
+    value:
+    userManaged: true
+  - name: DB_DATABASE
+    value:
+    userManaged: true
+  - name: DB_USERNAME
+    value:
+    userManaged: true
+  - name: DB_PASSWORD
+    value:
+    userManaged: true
+  - name: DB_PORT
+    value:
+    userManaged: true
 
 envMap:
-    db_host: DB_HOST
-    db_name: DB_DATABASE
-    db_user: DB_USERNAME
-    db_pass: DB_PASSWORD
-    db_port: DB_PORT
-    domain: APP_URL
+    domain_env: APP_URL
 
 domain: absensipp.deployaja.id
 
