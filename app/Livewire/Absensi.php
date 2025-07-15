@@ -33,7 +33,7 @@ class Absensi extends Component implements HasForms
             'nama' => 'required|string|max:255',
             'jam_kedatangan' => 'required',
             'kehadiran' => 'boolean',
-            'catatan' => 'nullable|string|max:1000',
+            'catatan' => $this->kehadiran ? 'nullable|string|max:1000' : 'required|string|max:1000',
         ]);
 
         ModelsAbsensi::create([
