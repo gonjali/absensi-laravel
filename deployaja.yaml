@@ -1,4 +1,5 @@
-name: laravel-absensi
+
+name: laravel-absensi-pp
 version: latest
 description: Laravel Absensi dengan PHP-FPM dan Nginx
 container:
@@ -17,7 +18,6 @@ env:
     value: "admin123adimin"
   - name: ADMIN_EMAIL_DOMAIN
     value: "@pinuspintar.id"
-
   - name: APP_NAME
     value: Absensi Laravel
   - name: APP_ENV

@@ -14,6 +14,7 @@ class Piket extends Model
     protected $fillable = [
         'name',
         'piket',
+        'hari',
         'catatan',
         'tanggal_waktu_piket',
     ];

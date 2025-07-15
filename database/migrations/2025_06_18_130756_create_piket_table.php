@@ -17,6 +17,7 @@ return new class extends Migration
             $table->dateTime('tanggal_waktu_piket')->comment('Tanggal dan waktu Piket');
             $table->boolean('piket')->default(false)->comment('Status Piket');
             $table->text('catatan')->nullable()->comment('Catatan');
+            $table->enum('hari', ['senin', 'selasa', 'rabu', 'kamis', 'jumat'])->comment('Hari Piket');
             $table->timestamps();
         });
     }

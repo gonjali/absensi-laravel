@@ -6,6 +6,7 @@ use App\Filament\Resources\AbsensiResource\Pages;
 use App\Filament\Resources\AbsensiResource\RelationManagers;
 use App\Models\Absensi;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
@@ -31,8 +32,8 @@ class AbsensiResource extends Resource
         return $form
             ->schema([
                 Select::make('metadata.nama')
-                    ->required()
-                    ->maxLength(225),
+                    ->required(),
+                    
 
                 TimePicker::make('jam_kedatangan')
                     ->label('jam kedatangan')

@@ -40,6 +40,16 @@ class PiketresourceResource extends Resource
                 TimePicker::make('tanggal_waktu_piket')
                     ->label('Tanggal dan Waktu Piket')
                     ->required(),
+                Forms\Components\Select::make('hari')
+                    ->label('Hari')
+                    ->options([
+                        'senin' => 'Senin',
+                        'selasa' => 'Selasa',
+                        'rabu' => 'Rabu',
+                        'kamis' => 'Kamis',
+                        'jumat' => 'Jumat',
+                    ])
+                    ->required(),
                 Toggle::make('piket')
                     ->label('Status Piket')
                     ->required(),
@@ -56,7 +66,10 @@ class PiketresourceResource extends Resource
                     ->label('Nama')
                     ->sortable()
                     ->searchable(),
-               TextColumn::make('tanggal_waktu_piket')
+                TextColumn::make('hari')
+                    ->label('Hari')
+                    ->sortable(),
+                TextColumn::make('tanggal_waktu_piket')
                     ->label('Tanggal'),
                 ToggleColumn::make('piket')
                     ->label('Status Piket'),
