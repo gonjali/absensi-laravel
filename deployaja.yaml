@@ -37,19 +37,19 @@ env:
     value: disable
 #insert from github variable/secret
   - name: DB_HOST
-    value:
+    value: localhost
     userManaged: true
   - name: DB_DATABASE
-    value:
+    value: absensi
     userManaged: true
   - name: DB_USERNAME
-    value:
+    value: postgres
     userManaged: true
   - name: DB_PASSWORD
-    value:
+    value: postgres
     userManaged: true
   - name: DB_PORT
-    value:
+    value: 5432
     userManaged: true
 
 envMap:
