@@ -53,6 +53,6 @@ class Absensi extends Component implements HasForms
     {
         return view('livewire.absensi', [
             'metadatas' => $this->metadatas,
-        ]);
+        ])->layout('layouts.absensi');
     }
 }
