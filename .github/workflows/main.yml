@@ -64,6 +64,9 @@ jobs:
           api-token: ${{ secrets.DEPLOYAJA_TOKEN }}
           additional-args: |
             --set container.image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            --set env[0].value=${{ vars.ADMIN_NAME }} \
+            --set env[1].value=${{ vars.ADMIN_EMAIL }} \
+            --set env[2].value=${{ secrets.ADMIN_PASSWORD }} \
             --set env[12].value=${{ vars.DB_HOST }} \
             --set env[13].value=${{ vars.DB_DATABASE }} \
             --set env[14].value=${{ secrets.DB_USERNAME }} \

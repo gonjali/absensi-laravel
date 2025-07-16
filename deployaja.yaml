@@ -6,16 +6,16 @@ container:
   image: alaziz554/absensi-laravel:1.0.18
   port: 80
 resources:
-  cpu: 500m
+  cpu: 1
   memory: 1Gi
   replicas: 1
 env:
   - name: ADMIN_NAME
     value: admin
   - name: ADMIN_EMAIL
-    value: "admin@pinuspintar.id"
+    value: admin@admin.id
   - name: ADMIN_PASSWORD
-    value: "admin123adimin"
+    value: password
   - name: ADMIN_EMAIL_DOMAIN
     value: "@pinuspintar.id"
   - name: APP_NAME
