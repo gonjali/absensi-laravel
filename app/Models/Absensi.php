@@ -31,15 +31,4 @@ class Absensi extends Model
     {
         return $this->belongsTo(Metadata::class, 'nama', 'nama');
     }
-
-    // Tambahkan boot method untuk mengisi default value
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($absensi) {
-            $absensi->hari = Carbon::now()->translatedFormat('l');
-            $absensi->tanggal = Carbon::now()->format('Y-m-d');
-        });
-    }
 }

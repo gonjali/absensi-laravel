@@ -29,7 +29,11 @@
                     </a>
                     <a href="/piket" 
                        class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        Piket
+                        Input Piket
+                    </a>
+                    <a href="/admin/absensis" 
+                       class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Admin Panel
                     </a>
                 </div>
             </div>

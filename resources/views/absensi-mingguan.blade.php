@@ -73,6 +73,15 @@
                     >
                         Minggu Berikutnya
                     </button>
+                    <a 
+                        :href="'/absensi-mingguan/export?tanggal=' + selectedDate"
+                        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span>Export Excel</span>
+                    </a>
                 </div>
             </div>
 
@@ -99,12 +108,18 @@
                             <template x-for="day in weekDays" :key="day.tanggal">
                                 <th class="day-header" x-text="day.nama_hari"></th>
                             </template>
+                            <th class="day-header bg-green-100 text-green-800">Total Hadir</th>
+                            <th class="day-header bg-yellow-100 text-yellow-800">Total Izin</th>
+                            <th class="day-header bg-red-100 text-red-800">Total Tidak Hadir</th>
                         </tr>
                         <tr>
                             <th class="name-cell">Tanggal</th>
                             <template x-for="day in weekDays" :key="day.tanggal">
                                 <th class="day-header text-sm" x-text="formatDate(day.tanggal)"></th>
                             </template>
+                            <th class="day-header bg-green-100 text-green-800 text-sm">5 Hari</th>
+                            <th class="day-header bg-yellow-100 text-yellow-800 text-sm">5 Hari</th>
+                            <th class="day-header bg-red-100 text-red-800 text-sm">5 Hari</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -120,15 +135,39 @@
                                                 :checked="isPresent(nama, day.tanggal)"
                                                 disabled
                                             >
+                                            <!-- Status Izin -->
+                                            <div x-show="isIzin(nama, day.tanggal)" class="mt-1">
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    🟡 IZIN
+                                                </span>
+                                            </div>
                                             <span 
                                                 x-show="getAttendanceTime(nama, day.tanggal)"
                                                 class="text-xs mt-1"
                                                 x-text="getAttendanceTime(nama, day.tanggal)"
                                                 :class="getAttendanceClass(nama, day.tanggal)"
                                             ></span>
+                                            <!-- Catatan/Izin -->
+                                            <span 
+                                                x-show="getAttendanceNote(nama, day.tanggal)"
+                                                class="text-xs mt-1 text-blue-600 font-medium"
+                                                x-text="getAttendanceNote(nama, day.tanggal)"
+                                            ></span>
                                         </div>
                                     </td>
                                 </template>
+                                <!-- Total Hadir -->
+                                <td class="checkbox-cell bg-green-50">
+                                    <div class="text-center font-semibold text-green-700" x-text="getTotalHadir(nama)"></div>
+                                </td>
+                                <!-- Total Izin -->
+                                <td class="checkbox-cell bg-yellow-50">
+                                    <div class="text-center font-semibold text-yellow-700" x-text="getTotalIzin(nama)"></div>
+                                </td>
+                                <!-- Total Tidak Hadir -->
+                                <td class="checkbox-cell bg-red-50">
+                                    <div class="text-center font-semibold text-red-700" x-text="getTotalTidakHadir(nama)"></div>
+                                </td>
                             </tr>
                         </template>
                     </tbody>
@@ -136,10 +175,14 @@
             </div>
 
             <!-- Summary -->
-            <div x-show="!loading" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div x-show="!loading" class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-green-50 p-4 rounded-lg">
                     <h3 class="font-semibold text-green-800">Total Hadir</h3>
                     <p class="text-2xl font-bold text-green-600" x-text="totalPresent"></p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-yellow-800">Total Izin</h3>
+                    <p class="text-2xl font-bold text-yellow-600" x-text="totalIzin"></p>
                 </div>
                 <div class="bg-red-50 p-4 rounded-lg">
                     <h3 class="font-semibold text-red-800">Total Tidak Hadir</h3>
@@ -163,6 +206,7 @@
                 weekDays: [],
                 allNames: [],
                 attendanceData: {},
+                totalPerKaryawan: {},
                 loading: true,
 
                 init() {
@@ -180,6 +224,7 @@
                         this.weekDays = data.hariMingguan;
                         this.allNames = data.semuaNama;
                         this.attendanceData = data.absensiMingguan;
+                        this.totalPerKaryawan = data.totalPerKaryawan;
                     } catch (error) {
                         console.error('Error loading data:', error);
                     } finally {
@@ -206,6 +251,16 @@
                            this.attendanceData[nama][tanggal] && 
                            this.attendanceData[nama][tanggal].length > 0 &&
                            this.attendanceData[nama][tanggal][0].kehadiran;
+                },
+
+                isIzin(nama, tanggal) {
+                    if (this.attendanceData[nama] && 
+                        this.attendanceData[nama][tanggal] && 
+                        this.attendanceData[nama][tanggal].length > 0) {
+                        const absensi = this.attendanceData[nama][tanggal][0];
+                        return !absensi.kehadiran && absensi.catatan && absensi.catatan.trim() !== '';
+                    }
+                    return false;
                 },
 
                 getAttendanceTime(nama, tanggal) {
@@ -261,6 +316,30 @@
                     return count;
                 },
 
+                getTotalHadir(nama) {
+                    return this.totalPerKaryawan[nama] ? this.totalPerKaryawan[nama].hadir : 0;
+                },
+
+                getTotalTidakHadir(nama) {
+                    return this.totalPerKaryawan[nama] ? this.totalPerKaryawan[nama].tidak_hadir : 0;
+                },
+
+                getTotalIzin(nama) {
+                    return this.totalPerKaryawan[nama] ? this.totalPerKaryawan[nama].izin : 0;
+                },
+
+                getAttendanceNote(nama, tanggal) {
+                    if (this.attendanceData[nama] && 
+                        this.attendanceData[nama][tanggal] && 
+                        this.attendanceData[nama][tanggal].length > 0) {
+                        const absensi = this.attendanceData[nama][tanggal][0];
+                        if (absensi.catatan && absensi.catatan.trim() !== '') {
+                            return absensi.catatan;
+                        }
+                    }
+                    return null;
+                },
+
                 get totalAbsent() {
                     let count = 0;
                     this.allNames.forEach(nama => {
@@ -269,6 +348,16 @@
                                 count++;
                             }
                         });
+                    });
+                    return count;
+                },
+
+                get totalIzin() {
+                    let count = 0;
+                    this.allNames.forEach(nama => {
+                        if (this.totalPerKaryawan[nama]) {
+                            count += this.totalPerKaryawan[nama].izin || 0;
+                        }
                     });
                     return count;
                 }

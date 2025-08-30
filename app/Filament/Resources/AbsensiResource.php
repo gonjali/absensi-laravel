@@ -34,7 +34,11 @@ class AbsensiResource extends Resource
                 Select::make('metadata.nama')
                     ->relationship('metadata', 'nama')
                     ->required(),
-                    
+
+                Forms\Components\DatePicker::make('tanggal')
+                    ->label('Tanggal')
+                    ->default(now())
+                    ->displayFormat('d/m/Y'),
 
                 TimePicker::make('jam_kedatangan')
                     ->label('jam kedatangan')
@@ -85,6 +89,18 @@ class AbsensiResource extends Resource
                 Tables\Columns\IconColumn::make('kehadiran')
                     ->boolean()
                     ->label('Hadir?'),
+
+                TextColumn::make('status_kehadiran')
+                    ->label('Status')
+                    ->formatStateUsing(function ($state, $record) {
+                        if ($record->kehadiran) {
+                            return '✅ Hadir';
+                        } elseif (!empty(trim($record->catatan))) {
+                            return '🟡 Izin';
+                        } else {
+                            return '❌ Tidak Hadir';
+                        }
+                    }),
 
                 TextColumn::make('catatan')
                     ->label('Catatan')
