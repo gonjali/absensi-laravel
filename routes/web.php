@@ -21,3 +21,7 @@ Route::get('/absensi', Absensi::class);
 Route::get('/piket', Piket::class);
 // Route for MetadataController
 Route::get('/metadata-controller', [MetadataController::class, 'index'])->name('metadata.index');
+
+// Route for weekly attendance
+Route::get('/absensi-mingguan', [App\Http\Controllers\AbsensiMingguanController::class, 'index'])->name('absensi.mingguan');
+Route::get('/api/absensi-mingguan', [App\Http\Controllers\AbsensiMingguanController::class, 'getDataMingguan'])->name('absensi.mingguan.api');

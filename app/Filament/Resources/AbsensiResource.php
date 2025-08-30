@@ -32,6 +32,7 @@ class AbsensiResource extends Resource
         return $form
             ->schema([
                 Select::make('metadata.nama')
+                    ->relationship('metadata', 'nama')
                     ->required(),
                     
 
