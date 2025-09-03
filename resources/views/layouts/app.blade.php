@@ -19,10 +19,17 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('absensi.mingguan') }}" 
-                       class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        Absensi Mingguan
-                    </a>
+                    @auth
+                        <a href="{{ route('absensi.mingguan') }}" 
+                           class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Absensi Mingguan
+                        </a>
+                    @else
+                        <a href="/admin/login" 
+                           class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Absensi Mingguan
+                        </a>
+                    @endauth
                     <a href="/absensi" 
                        class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         Input Absensi

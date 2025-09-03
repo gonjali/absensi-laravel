@@ -9,12 +9,17 @@ use App\Livewire\Piket;
 // For example, if the correct class is App\Http\Livewire\Metadata, use:
 use App\Http\Livewire\Metadata;
 use App\Http\Controllers\MetadataController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Auth routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Route for metadata Livewire component
 Route::get('/absensi', Absensi::class);
@@ -22,8 +27,10 @@ Route::get('/piket', Piket::class);
 // Route for MetadataController
 Route::get('/metadata-controller', [MetadataController::class, 'index'])->name('metadata.index');
 
-// Route for weekly attendance
-Route::get('/absensi-mingguan', [App\Http\Controllers\AbsensiMingguanController::class, 'index'])->name('absensi.mingguan');
-Route::get('/api/absensi-mingguan', [App\Http\Controllers\AbsensiMingguanController::class, 'getDataMingguan'])->name('absensi.mingguan.api');
-Route::get('/absensi-mingguan/export', [App\Http\Controllers\AbsensiMingguanController::class, 'exportExcel'])->name('absensi.mingguan.export');
+// Route for weekly attendance - Protected by admin auth
+Route::middleware(['admin.auth'])->group(function () {
+    Route::get('/absensi-mingguan', [App\Http\Controllers\AbsensiMingguanController::class, 'index'])->name('absensi.mingguan');
+    Route::get('/api/absensi-mingguan', [App\Http\Controllers\AbsensiMingguanController::class, 'getDataMingguan'])->name('absensi.mingguan.api');
+    Route::get('/absensi-mingguan/export', [App\Http\Controllers\AbsensiMingguanController::class, 'exportExcel'])->name('absensi.mingguan.export');
+});
 
